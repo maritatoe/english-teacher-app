@@ -63,6 +63,7 @@ CREATE TABLE payments (
   amount NUMERIC(10, 2) NOT NULL,
   paid BOOLEAN NOT NULL DEFAULT false,
   date_paid TIMESTAMPTZ,
+  payment_method TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -132,6 +133,11 @@ ON payments FOR ALL
 TO authenticated
 USING (auth.uid() = teacher_id)
 WITH CHECK (auth.uid() = teacher_id);
+
+-- =======================================================
+-- MIGRATION: Run this if you already have the database set up
+-- ALTER TABLE payments ADD COLUMN IF NOT EXISTS payment_method TEXT;
+-- =======================================================
 
 -- =======================================================
 -- Setup complete! Environment should be ready to go.
