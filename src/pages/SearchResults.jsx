@@ -43,14 +43,18 @@ export default function SearchResults() {
       <h1 className="heading-1 flex items-center gap-2" style={{ marginBottom: 'var(--space-4)' }}><Search /> Global Search</h1>
       
       <Card className="mb-6">
-        <form onSubmit={handleSearch} className="flex gap-2">
-          <Input 
-            placeholder="Search students, groups, topics..." 
-            value={query} 
-            onChange={e => setQuery(e.target.value)} 
-            style={{ flex: 1 }}
-          />
-          <Button type="submit">Search</Button>
+        <form onSubmit={handleSearch} className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <input 
+              className="form-input"
+              placeholder="Search..." 
+              value={query} 
+              onChange={e => setQuery(e.target.value)} 
+              style={{ flex: 1 }}
+            />
+            <Button type="submit">Search</Button>
+          </div>
+          <p className="text-light text-sm" style={{ paddingLeft: 'var(--space-1)' }}>Search students, groups, topics...</p>
         </form>
       </Card>
 
