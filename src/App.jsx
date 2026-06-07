@@ -6,9 +6,8 @@ import { Layout } from './components/Layout';
 // Pages
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import StudentsList from './pages/StudentsList';
+import StudentsDirectory from './pages/StudentsDirectory';
 import StudentProfile from './pages/StudentProfile';
-import GroupsManagement from './pages/GroupsManagement';
 import ClassesManagement from './pages/ClassesManagement';
 import AttendanceScreen from './pages/AttendanceScreen';
 import PaymentsManagement from './pages/PaymentsManagement';
@@ -50,9 +49,8 @@ export default function App() {
         
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
-          <Route path="students" element={<StudentsList />} />
+          <Route path="students" element={<StudentsDirectory />} />
           <Route path="students/:id" element={<StudentProfile />} />
-          <Route path="groups" element={<GroupsManagement />} />
           <Route path="classes" element={<ClassesManagement />} />
           <Route path="attendance" element={<AttendanceScreen />} />
           <Route path="payments" element={<PaymentsManagement />} />

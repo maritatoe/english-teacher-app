@@ -62,8 +62,7 @@ export default function GroupsManagement() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="heading-1" style={{ marginBottom: 0 }}>Groups</h1>
+      <div className="flex justify-end items-center mb-4">
         <Button onClick={() => setNewGroup(newGroup ? null : { name: '', level: 'Intermediate' })}>
           {newGroup ? 'Cancel' : '+ Add Group'}
         </Button>

@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 import { 
   Users, 
   LayoutDashboard, 
-  Layers, 
   CheckSquare, 
   CalendarDays, 
   CreditCard,
@@ -37,7 +36,6 @@ export function Layout() {
   const navItems = [
     { to: '/', icon: <LayoutDashboard size={24} />, label: 'Dashboard' },
     { to: '/students', icon: <Users size={24} />, label: 'Students' },
-    { to: '/groups', icon: <Layers size={24} />, label: 'Groups' },
     { to: '/classes', icon: <CalendarDays size={24} />, label: 'Classes' },
     { to: '/attendance', icon: <CheckSquare size={24} />, label: 'Attend' },
     { to: '/payments', icon: <CreditCard size={24} />, label: 'Payments' },
