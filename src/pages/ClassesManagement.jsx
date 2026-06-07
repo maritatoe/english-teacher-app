@@ -86,7 +86,7 @@ export default function ClassesManagement() {
       notes: newClass.notes
     }]).select();
 
-    if (error) { alert('Error al crear la clase'); return; }
+    if (error) { alert('Error adding class'); return; }
 
     // Init attendance
     if (classData && classData.length > 0) {
@@ -112,7 +112,7 @@ export default function ClassesManagement() {
     setEditingClass({
       id: cls.id,
       group_id: cls.group_id,
-      groupName: cls.groups?.name || 'Grupo',
+      groupName: cls.groups?.name || 'Group',
       date: cls.date,
       topic: cls.topic,
       notes: cls.notes || ''
@@ -160,7 +160,7 @@ export default function ClassesManagement() {
       .eq('id', editingClass.id);
 
     if (error) {
-      alert('Error al guardar los cambios de la clase');
+      alert('Error saving class changes');
       return;
     }
 
@@ -172,7 +172,7 @@ export default function ClassesManagement() {
   };
 
   const handleDeleteClass = async (id) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar esta clase? Se borrarán de forma permanente todos sus registros de asistencia.')) return;
+    if (!confirm('Are you sure you want to delete this class? All attendance records will be permanently deleted.')) return;
     
     const { error } = await supabase
       .from('classes')
@@ -180,7 +180,7 @@ export default function ClassesManagement() {
       .eq('id', id);
       
     if (error) {
-      alert('Error al eliminar la clase');
+      alert('Error deleting class');
       return;
     }
     
@@ -212,46 +212,46 @@ export default function ClassesManagement() {
 
   const getStudentStatusForClass = (classId) => {
     const att = studentAttendance.find(a => a.class_id === classId);
-    return att ? (att.present ? 'Presente' : 'Ausente') : null;
+    return att ? (att.present ? 'Present' : 'Absent') : null;
   };
 
-  if (loading && classes.length === 0) return <div>Cargando registro de clases...</div>;
+  if (loading && classes.length === 0) return <div>Loading class registry...</div>;
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="heading-1" style={{ marginBottom: 0 }}>Registro de Clases</h1>
-        <Button onClick={() => setShowAdd(!showAdd)}>{showAdd ? 'Cancelar' : '+ Nueva Clase'}</Button>
+        <h1 className="heading-1" style={{ marginBottom: 0 }}>Class Registry</h1>
+        <Button onClick={() => setShowAdd(!showAdd)}>{showAdd ? 'Cancel' : '+ New Class'}</Button>
       </div>
 
-      {/* Formulario de Carga */}
+      {/* Add Class Form */}
       {showAdd && (
         <Card className="mb-4">
-          <h2 className="heading-2">Crear Clase</h2>
+          <h2 className="heading-2">Create Class</h2>
           <form onSubmit={handleAddClass}>
             <div className="form-group">
-              <label className="form-label">Grupo</label>
+              <label className="form-label">Group</label>
               <select className="form-select" value={newClass.groupId} onChange={e => setNewClass({...newClass, groupId: e.target.value})} required>
-                <option value="" disabled>Selecciona un grupo</option>
+                <option value="" disabled>Select a group</option>
                 {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
               </select>
             </div>
-            <Input label="Fecha" type="date" required value={newClass.date} onChange={e => setNewClass({...newClass, date: e.target.value})} />
-            <Input label="Tema / Contenido" required placeholder="Ej. Present Simple vs Present Continuous" value={newClass.topic} onChange={e => setNewClass({...newClass, topic: e.target.value})} />
-            <Input label="Notas de la clase" placeholder="Ej. Ejercicios en página 24, tarea pendiente..." value={newClass.notes} onChange={e => setNewClass({...newClass, notes: e.target.value})} />
-            <Button type="submit">Guardar Clase</Button>
+            <Input label="Date" type="date" required value={newClass.date} onChange={e => setNewClass({...newClass, date: e.target.value})} />
+            <Input label="Topic / Content" required placeholder="e.g. Present Simple vs Present Continuous" value={newClass.topic} onChange={e => setNewClass({...newClass, topic: e.target.value})} />
+            <Input label="Notes" placeholder="e.g. Workbook page 24, homework due..." value={newClass.notes} onChange={e => setNewClass({...newClass, notes: e.target.value})} />
+            <Button type="submit">Save Class</Button>
           </form>
         </Card>
       )}
 
-      {/* Barra de Filtros */}
+      {/* Filters Bar */}
       <Card className="mb-4">
         <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            <Filter size={18} /> Filtros:
+            <Filter size={18} /> Filters:
           </div>
           
-          {/* Filtro por Alumno */}
+          {/* Student Filter */}
           <div className="form-group" style={{ marginBottom: 0, minWidth: '200px', flex: 1 }}>
             <select 
               className="form-select" 
@@ -259,14 +259,14 @@ export default function ClassesManagement() {
               onChange={e => setSelectedStudentId(e.target.value)}
               style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}
             >
-              <option value="">Todos los alumnos</option>
+              <option value="">All students</option>
               {students.map(s => (
                 <option key={s.id} value={s.id}>{s.name} ({s.level})</option>
               ))}
             </select>
           </div>
 
-          {/* Filtro Semanal */}
+          {/* Weekly Filter */}
           <button 
             type="button"
             onClick={() => setWeeklyOnly(!weeklyOnly)}
@@ -286,12 +286,12 @@ export default function ClassesManagement() {
             }}
           >
             <Calendar size={16} />
-            {weeklyOnly ? 'Vista: Esta Semana' : 'Vista: Todas'}
+            {weeklyOnly ? 'View: This Week' : 'View: All'}
           </button>
         </div>
       </Card>
 
-      {/* Listado de Clases */}
+      {/* Classes List */}
       <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
         {filteredClasses.map(c => (
           <Card key={c.id}>
@@ -301,21 +301,21 @@ export default function ClassesManagement() {
                 <div className="text-light text-sm">
                   {c.groups?.name} • {c.date}
                 </div>
-                {/* Indicador de asistencia si se filtra por alumno */}
+                {/* Student Attendance indicator */}
                 {selectedStudentId && (
                   <div style={{ marginTop: 'var(--space-1)' }}>
-                    {getStudentStatusForClass(c.id) === 'Presente' ? (
-                      <span className="badge badge-success">Asistió (Presente)</span>
-                    ) : getStudentStatusForClass(c.id) === 'Ausente' ? (
-                      <span className="badge badge-danger">Faltó (Ausente)</span>
+                    {getStudentStatusForClass(c.id) === 'Present' ? (
+                      <span className="badge badge-success">Attended (Present)</span>
+                    ) : getStudentStatusForClass(c.id) === 'Absent' ? (
+                      <span className="badge badge-danger">Missed (Absent)</span>
                     ) : (
-                      <span className="badge badge-warning">Sin registro</span>
+                      <span className="badge badge-warning">No record</span>
                     )}
                   </div>
                 )}
               </div>
               <Button onClick={() => handleOpenDetails(c)} variant="outline" style={{ padding: '4px 12px', fontSize: '12px' }}>
-                Detalles / Editar
+                Details / Edit
               </Button>
             </div>
             {c.notes && (
@@ -326,16 +326,16 @@ export default function ClassesManagement() {
           </Card>
         ))}
         {filteredClasses.length === 0 && (
-          <p className="text-light text-center py-6">No se encontraron clases con los filtros aplicados.</p>
+          <p className="text-light text-center py-6">No classes found with the current filters.</p>
         )}
       </div>
 
-      {/* Modal de Detalles y Asistencia */}
+      {/* Class Details and Attendance Modal */}
       {editingClass && (
         <div className="modal-backdrop" onClick={() => setEditingClass(null)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className="heading-2" style={{ marginBottom: 0 }}>Detalles de Clase: {editingClass.groupName}</h2>
+              <h2 className="heading-2" style={{ marginBottom: 0 }}>Class Details: {editingClass.groupName}</h2>
               <button 
                 onClick={() => setEditingClass(null)} 
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)' }}
@@ -345,47 +345,47 @@ export default function ClassesManagement() {
             </div>
             
             <div className="modal-body">
-              {/* Formulario de Modificación */}
+              {/* Edit Class Info */}
               <form onSubmit={handleUpdateClass} style={{ marginBottom: 'var(--space-6)' }}>
                 <h3 className="heading-3" style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 'var(--space-3)', color: 'var(--color-primary)' }}>
-                  Editar Información General
+                  General Information
                 </h3>
                 <Input 
-                  label="Tema / Contenido" 
+                  label="Topic / Content" 
                   value={editingClass.topic} 
                   onChange={e => setEditingClass({...editingClass, topic: e.target.value})} 
                   required 
                 />
                 <Input 
-                  label="Fecha" 
+                  label="Date" 
                   type="date" 
                   value={editingClass.date} 
                   onChange={e => setEditingClass({...editingClass, date: e.target.value})} 
                   required 
                 />
                 <Input 
-                  label="Notas de la Clase" 
+                  label="Notes" 
                   value={editingClass.notes} 
                   onChange={e => setEditingClass({...editingClass, notes: e.target.value})} 
                 />
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'var(--space-2)' }}>
-                  <Button type="submit">Guardar Cambios</Button>
+                  <Button type="submit">Save Changes</Button>
                 </div>
               </form>
 
               <hr style={{ border: '0', borderTop: '1px solid var(--color-border)', margin: 'var(--space-4) 0' }} />
 
-              {/* Registro de Asistencia */}
+              {/* Attendance Registry */}
               <div>
                 <h3 className="heading-3" style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 'var(--space-3)', color: 'var(--color-primary)' }}>
-                  Asistencia de Alumnos
+                  Student Attendance
                 </h3>
                 {loadingModalAttendance ? (
-                  <div className="text-light">Cargando asistencia...</div>
+                  <div className="text-light">Loading attendance...</div>
                 ) : (
                   <div style={{ display: 'grid', gap: 'var(--space-2)' }}>
                     {modalAttendance.length === 0 && (
-                      <p className="text-light text-sm">No hay alumnos asignados a este grupo.</p>
+                      <p className="text-light text-sm">No students assigned to this group.</p>
                     )}
                     {modalAttendance.map(att => (
                       <div 
@@ -405,7 +405,7 @@ export default function ClassesManagement() {
                       >
                         <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>{att.students?.name}</span>
                         <span className={`badge ${att.present ? 'badge-success' : 'badge-danger'}`}>
-                          {att.present ? 'PRESENTE' : 'AUSENTE'}
+                          {att.present ? 'PRESENT' : 'ABSENT'}
                         </span>
                       </div>
                     ))}
@@ -420,9 +420,9 @@ export default function ClassesManagement() {
                 onClick={() => handleDeleteClass(editingClass.id)}
                 style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
               >
-                <Trash2 size={16} /> Eliminar Clase
+                <Trash2 size={16} /> Delete Class
               </Button>
-              <Button variant="outline" onClick={() => setEditingClass(null)}>Cerrar</Button>
+              <Button variant="outline" onClick={() => setEditingClass(null)}>Close</Button>
             </div>
           </div>
         </div>

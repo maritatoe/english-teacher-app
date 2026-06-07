@@ -30,7 +30,6 @@ export default function StudentProfile() {
 
     // Groups
     const { data: stGroups } = await supabase.from('group_students').select('group_id').eq('student_id', id);
-    let groupNames = [];
     if (stGroups && stGroups.length > 0) {
       const gIds = stGroups.map(g => g.group_id);
       const { data: gData } = await supabase.from('groups').select('*').in('id', gIds);
@@ -50,7 +49,7 @@ export default function StudentProfile() {
         classId: item.class_id,
         date: item.classes.date,
         topic: item.classes.topic,
-        groupName: item.classes.groups?.name || 'Grupo'
+        groupName: item.classes.groups?.name || 'Group'
       }))
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -87,17 +86,17 @@ export default function StudentProfile() {
     }
   };
 
-  if (loading) return <div style={{ padding: 'var(--space-4)' }}>Cargando perfil del alumno...</div>;
-  if (!student) return <div style={{ padding: 'var(--space-4)' }}>Alumno no encontrado.</div>;
+  if (loading) return <div style={{ padding: 'var(--space-4)' }}>Loading student profile...</div>;
+  if (!student) return <div style={{ padding: 'var(--space-4)' }}>Student not found.</div>;
 
   return (
     <div>
       <Link to="/students" className="flex items-center gap-2 mb-4 text-primary" style={{ color: 'var(--color-primary)', fontWeight: 500 }}>
-        <ArrowLeft size={20} /> Volver a la lista
+        <ArrowLeft size={20} /> Back to list
       </Link>
       
       <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
-        {/* Tarjeta de Información General */}
+        {/* General Info Card */}
         <Card>
           <div className="flex items-center gap-4 mb-4">
             <div style={{ padding: 'var(--space-4)', backgroundColor: 'var(--color-primary)', color: 'white', borderRadius: '50%' }}>
@@ -109,34 +108,34 @@ export default function StudentProfile() {
             </div>
           </div>
           <div style={{ whiteSpace: 'pre-line' }} className="text-sm">
-            <strong>Notas/Observaciones:</strong><br />
-            {student.notes || 'Sin notas añadidas.'}
+            <strong>Notes:</strong><br />
+            {student.notes || 'No notes added.'}
           </div>
           <div className="mt-4 text-sm" style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--space-3)' }}>
-            <strong>Grupos asignados:</strong> {groups.length > 0 ? groups.map(g => g.name).join(', ') : 'Ninguno asignado'}
+            <strong>Groups:</strong> {groups.length > 0 ? groups.map(g => g.name).join(', ') : 'Not assigned'}
           </div>
         </Card>
 
-        {/* Tarjeta de Estadísticas de Asistencia */}
+        {/* Attendance Stats Card */}
         <Card>
-          <h2 className="heading-2 flex items-center gap-2"><BarChart size={20}/> Estadísticas de Asistencia</h2>
+          <h2 className="heading-2 flex items-center gap-2"><BarChart size={20}/> Attendance Stats</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-4)', marginTop: 'var(--space-2)' }}>
             <div style={{ textAlign: 'center', padding: 'var(--space-3)', backgroundColor: 'var(--color-bg)', borderRadius: 'var(--radius-md)' }}>
-              <div className="text-light text-sm">Clases Asistidas</div>
+              <div className="text-light text-sm">Classes Attended</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-success)' }}>{stats.totalAttended} / {stats.totalClasses}</div>
             </div>
             <div style={{ textAlign: 'center', padding: 'var(--space-3)', backgroundColor: 'var(--color-bg)', borderRadius: 'var(--radius-md)' }}>
-              <div className="text-light text-sm">Porcentaje de Asistencia</div>
+              <div className="text-light text-sm">Attendance Rate</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-primary)' }}>{stats.attendanceRate}%</div>
             </div>
           </div>
         </Card>
 
-        {/* Historial de Pagos */}
+        {/* Payment History Card */}
         <Card>
-          <h2 className="heading-2 flex items-center gap-2"><CreditCard size={20}/> Historial de Pagos</h2>
+          <h2 className="heading-2 flex items-center gap-2"><CreditCard size={20}/> Payment History</h2>
           {payments.length === 0 ? (
-            <p className="text-light text-sm">No hay pagos registrados para este alumno.</p>
+            <p className="text-light text-sm">No payments recorded for this student.</p>
           ) : (
              <div style={{ display: 'grid', gap: 'var(--space-2)' }}>
                 {payments.map(p => (
@@ -150,12 +149,12 @@ export default function StudentProfile() {
                      }}
                    >
                      <div>
-                       <div style={{ fontWeight: 600 }}>Mes {p.month}/{p.year}</div>
+                       <div style={{ fontWeight: 600 }}>Month {p.month}/{p.year}</div>
                        <div className="text-sm text-light">
                          {p.paid ? (
-                           <span>Pagado el {formatPaymentDate(p.date_paid)} vía <strong>{p.payment_method || 'Efectivo'}</strong></span>
+                           <span>Paid on {formatPaymentDate(p.date_paid)} via <strong>{p.payment_method || 'Cash'}</strong></span>
                          ) : (
-                           <span style={{ color: 'var(--color-danger)' }}>Pendiente de pago</span>
+                           <span style={{ color: 'var(--color-danger)' }}>Pending</span>
                          )}
                        </div>
                      </div>
@@ -168,11 +167,11 @@ export default function StudentProfile() {
           )}
         </Card>
 
-        {/* Historial de Clases */}
+        {/* Class History Card */}
         <Card>
-          <h2 className="heading-2 flex items-center gap-2"><CalendarDays size={20}/> Historial de Clases y Asistencia</h2>
+          <h2 className="heading-2 flex items-center gap-2"><CalendarDays size={20}/> Class & Attendance History</h2>
           {classHistory.length === 0 ? (
-            <p className="text-light text-sm">No se registran clases para este alumno.</p>
+            <p className="text-light text-sm">No classes recorded for this student.</p>
           ) : (
             <div style={{ display: 'grid', gap: 'var(--space-2)', maxHeight: '400px', overflowY: 'auto', paddingRight: '4px' }}>
               {classHistory.map(h => (
@@ -193,9 +192,9 @@ export default function StudentProfile() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     {h.present ? (
-                      <span className="badge badge-success" style={{ gap: '4px' }}><CheckCircle size={14} /> PRESENTE</span>
+                      <span className="badge badge-success" style={{ gap: '4px' }}><CheckCircle size={14} /> PRESENT</span>
                     ) : (
-                      <span className="badge badge-danger" style={{ gap: '4px' }}><XCircle size={14} /> AUSENTE</span>
+                      <span className="badge badge-danger" style={{ gap: '4px' }}><XCircle size={14} /> ABSENT</span>
                     )}
                   </div>
                 </div>

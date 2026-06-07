@@ -45,7 +45,7 @@ export default function StudentsList() {
       .eq('id', editingStudent.id);
 
     if (error) {
-      alert('Error al actualizar la información del alumno');
+      alert('Error updating student information');
       return;
     }
 
@@ -54,28 +54,28 @@ export default function StudentsList() {
   };
 
   const deleteStudent = async (id) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este alumno? Se borrará de forma permanente junto con todos sus registros de asistencia y cobros.')) return;
+    if (!confirm('Are you sure you want to delete this student? They will be permanently deleted along with all attendance and payment records.')) return;
     await supabase.from('students').delete().eq('id', id);
     fetchStudents();
   };
 
-  if (loading) return <div style={{ padding: 'var(--space-4)' }}>Cargando alumnos...</div>;
+  if (loading) return <div style={{ padding: 'var(--space-4)' }}>Loading students...</div>;
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="heading-1" style={{ marginBottom: 0 }}>Alumnos</h1>
-        <Button onClick={() => setShowAdd(!showAdd)}>{showAdd ? 'Cancelar' : '+ Nuevo Alumno'}</Button>
+        <h1 className="heading-1" style={{ marginBottom: 0 }}>Students</h1>
+        <Button onClick={() => setShowAdd(!showAdd)}>{showAdd ? 'Cancel' : '+ Add Student'}</Button>
       </div>
 
-      {/* Formulario de Carga */}
+      {/* Add Student Form */}
       {showAdd && (
         <Card className="mb-4">
-          <h2 className="heading-2">Nuevo Alumno</h2>
+          <h2 className="heading-2">New Student</h2>
           <form onSubmit={handleAddStudent}>
-            <Input label="Nombre completo" required placeholder="Ej. Juan Pérez" value={newStudent.name} onChange={e => setNewStudent({...newStudent, name: e.target.value})} />
+            <Input label="Full Name" required placeholder="e.g. John Doe" value={newStudent.name} onChange={e => setNewStudent({...newStudent, name: e.target.value})} />
             <div className="form-group">
-              <label className="form-label">Nivel de inglés</label>
+              <label className="form-label">English Level</label>
               <select className="form-select" value={newStudent.level} onChange={e => setNewStudent({...newStudent, level: e.target.value})}>
                 <option value="Beginner">Beginner</option>
                 <option value="Elementary">Elementary</option>
@@ -83,13 +83,13 @@ export default function StudentsList() {
                 <option value="Advanced">Advanced</option>
               </select>
             </div>
-            <Input label="Notas / Observaciones" placeholder="Ej. Contacto del tutor, debilidades, preferencias..." value={newStudent.notes} onChange={e => setNewStudent({...newStudent, notes: e.target.value})} />
-            <Button type="submit">Guardar Alumno</Button>
+            <Input label="Notes" placeholder="e.g. Parent contact, preferences..." value={newStudent.notes} onChange={e => setNewStudent({...newStudent, notes: e.target.value})} />
+            <Button type="submit">Save Student</Button>
           </form>
         </Card>
       )}
 
-      {/* Listado de Alumnos */}
+      {/* Students List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
         {students.map(s => (
           <Card key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
@@ -99,23 +99,23 @@ export default function StudentsList() {
             </Link>
             <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
               <Button variant="outline" style={{ padding: '6px 12px', fontSize: '0.875rem' }} onClick={() => setEditingStudent(s)}>
-                Editar
+                Edit
               </Button>
               <Button variant="danger" style={{ padding: '6px 12px', fontSize: '0.875rem' }} onClick={() => deleteStudent(s.id)}>
-                Eliminar
+                Delete
               </Button>
             </div>
           </Card>
         ))}
-        {students.length === 0 && !showAdd && <p className="text-light">Aún no hay alumnos registrados.</p>}
+        {students.length === 0 && !showAdd && <p className="text-light">No students registered yet.</p>}
       </div>
 
-      {/* Modal de Edición de Alumno */}
+      {/* Edit Student Modal */}
       {editingStudent && (
         <div className="modal-backdrop" onClick={() => setEditingStudent(null)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className="heading-2" style={{ marginBottom: 0 }}>Editar Información del Alumno</h2>
+              <h2 className="heading-2" style={{ marginBottom: 0 }}>Edit Student Details</h2>
               <button 
                 onClick={() => setEditingStudent(null)} 
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)' }}
@@ -127,14 +127,14 @@ export default function StudentsList() {
             <form onSubmit={handleUpdateStudent}>
               <div className="modal-body">
                 <Input 
-                  label="Nombre completo" 
+                  label="Full Name" 
                   value={editingStudent.name} 
                   onChange={e => setEditingStudent({...editingStudent, name: e.target.value})} 
                   required 
                 />
                 
                 <div className="form-group">
-                  <label className="form-label">Nivel de inglés</label>
+                  <label className="form-label">English Level</label>
                   <select 
                     className="form-select" 
                     value={editingStudent.level} 
@@ -148,15 +148,15 @@ export default function StudentsList() {
                 </div>
                 
                 <Input 
-                  label="Notas / Observaciones" 
+                  label="Notes" 
                   value={editingStudent.notes || ''} 
                   onChange={e => setEditingStudent({...editingStudent, notes: e.target.value})} 
                 />
               </div>
 
               <div className="modal-footer">
-                <Button variant="outline" type="button" onClick={() => setEditingStudent(null)}>Cancelar</Button>
-                <Button type="submit">Guardar Cambios</Button>
+                <Button variant="outline" type="button" onClick={() => setEditingStudent(null)}>Cancel</Button>
+                <Button type="submit">Save Changes</Button>
               </div>
             </form>
           </div>

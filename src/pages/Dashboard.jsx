@@ -113,66 +113,66 @@ export default function Dashboard() {
     </Card>
   );
 
-  if (loading) return <div style={{ padding: 'var(--space-4)' }}>Cargando panel de control...</div>;
+  if (loading) return <div style={{ padding: 'var(--space-4)' }}>Loading dashboard...</div>;
 
   return (
     <div>
-      <h1 className="heading-1">Dashboard de Control</h1>
+      <h1 className="heading-1">Dashboard</h1>
       
-      {/* Sección Financiera */}
-      <h2 className="heading-2" style={{ marginTop: 'var(--space-4)', fontSize: '1.1rem', color: 'var(--color-primary)' }}>Resumen de Finanzas (Mes en curso)</h2>
+      {/* Financial Section */}
+      <h2 className="heading-2" style={{ marginTop: 'var(--space-4)', fontSize: '1.1rem', color: 'var(--color-primary)' }}>Financial Summary (Current Month)</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-4)', marginBottom: 'var(--space-6)' }}>
         <StatCard 
-          title="Ingresos Recaudados" 
+          title="Collected Income" 
           value={`$${stats.collectedMonthAmount.toFixed(2)}`} 
-          detail="Cobrado este mes"
+          detail="Collected this month"
           icon={TrendingUp} 
           color="var(--color-success)" 
         />
         <StatCard 
-          title="Adeudado del Mes" 
+          title="Owed this Month" 
           value={`$${stats.pendingMonthAmount.toFixed(2)}`} 
-          detail={`${stats.pendingMonthCount} cuotas pendientes`}
+          detail={`${stats.pendingMonthCount} pending invoices`}
           icon={DollarSign} 
           color="var(--color-warning)" 
         />
         <StatCard 
-          title="Deuda Histórica Acumulada" 
+          title="Accumulated Historical Debt" 
           value={`$${stats.pendingHistAmount.toFixed(2)}`} 
-          detail={`${stats.pendingHistCount} cuotas adeudadas anteriores`}
+          detail={`${stats.pendingHistCount} previous pending invoices`}
           icon={AlertCircle} 
           color="var(--color-danger)" 
         />
       </div>
 
-      {/* Sección Académica */}
-      <h2 className="heading-2" style={{ fontSize: '1.1rem', color: 'var(--color-primary)' }}>Resumen Académico</h2>
+      {/* Academic Section */}
+      <h2 className="heading-2" style={{ fontSize: '1.1rem', color: 'var(--color-primary)' }}>Academic Summary</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-4)' }}>
         <StatCard 
-          title="Alumnos Totales" 
+          title="Total Students" 
           value={stats.totalStudents} 
-          detail="Estudiantes activos"
+          detail="Active students"
           icon={Users} 
           color="var(--color-primary)" 
         />
         <StatCard 
-          title="Grupos de Estudio" 
+          title="Study Groups" 
           value={stats.totalGroups} 
-          detail="Grupos registrados"
+          detail="Registered groups"
           icon={BookOpen} 
           color="var(--color-success)" 
         />
         <StatCard 
-          title="Clases Dictadas (Esta Semana)" 
+          title="Classes Given (This Week)" 
           value={stats.classesThisWeek} 
-          detail="Semana en curso"
+          detail="Current week"
           icon={Clock} 
           color="var(--color-warning)" 
         />
         <StatCard 
-          title="Clases Dictadas (Este Mes)" 
+          title="Classes Given (This Month)" 
           value={stats.classesThisMonth} 
-          detail="Mes en curso"
+          detail="Current month"
           icon={Clock} 
           color="var(--color-text)" 
         />
